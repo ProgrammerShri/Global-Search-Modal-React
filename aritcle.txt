@@ -1,0 +1,64 @@
+https://thewebdev.info/2021/05/24/how-to-listen-for-key-press-for-document-in-react-js/
+
+Sometimes, we want to listen for keypresses on the whole document in React.js.
+
+In this article, we’ll look at how to listen for keypresses on the whole document in React.js.
+
+Listen for Key Press for Document in React.js
+To listen for keypresses on the whole document in React.js, we can call addEventListener on document in the useEffect hook.
+
+For instance, we can write:
+
+import React, { useEffect, useRef } from "react";
+const ESCAPE_KEYS = ["27", "Escape"];
+
+const useEventListener = (eventName, handler, element = window) => {
+  const savedHandler = useRef();
+
+  useEffect(() => {
+    savedHandler.current = handler;
+  }, [handler]);
+
+  useEffect(() => {
+    const eventListener = (event) => savedHandler.current(event);
+    element.addEventListener(eventName, eventListener);
+    return () => {
+      element.removeEventListener(eventName, eventListener);
+    };
+  }, [eventName, element]);
+};
+
+export default function App() {
+  const handler = ({ key }) => {
+    if (ESCAPE_KEYS.includes(String(key))) {
+      console.log("Escape key pressed!");
+    }
+  };
+
+  useEventListener("keydown", handler);
+
+  return <span>hello world</span>;
+}
+
+
+We create the useEventListener hook that takes the eventName , handler , and element parameters.
+
+eventName is the event name.
+
+handler is the event handler function.
+
+element is the element we call addEventListener on.
+
+In the first useEffect callback, we set the handler as the current value of the ref to cache it.
+
+Next, in the 2nd useEffect callback, we call element.addEventListener with the eventName and handler to listen to the eventName event.
+
+Then we use the useEventHandler hook in App by calling it with 'keydown' and the handler function to listen to the keydown event.,
+
+Then we get key property in handler to check which key is pressed.
+
+Conclusion
+To listen for keypresses on the whole document in React.js, we can call addEventListener on document in the useEffect hook.
+
+
+
